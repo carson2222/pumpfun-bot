@@ -3,17 +3,23 @@ import * as web3 from "@solana/web3.js";
 import getBondingCurvePDA from "./getBondingCurvePDA";
 import tokenDataFromBondingCurveTokenAccBuffer from "./tokenDataFromBondingCurveTokenAccBuffer";
 import getBuyPrice from "./getBuyPrice";
-import { Program } from "@coral-xyz/anchor";
+import { AnchorProvider, Program, Wallet } from "@coral-xyz/anchor";
 import { BN } from "bn.js";
 import { PumpFun } from "../pump-fun";
+import IDL from "../pump-fun.json";
 async function buyToken(
   mint: web3.PublicKey,
   connection: web3.Connection,
   keypair: web3.Keypair,
   solAmount: number,
-  slippage: number,
-  program: Program<PumpFun>
+  slippage: number
 ) {
+  // Load Pumpfun provider
+  const provider = new AnchorProvider(connection, new Wallet(keypair), {
+    commitment: "finalized",
+  });
+  const program = new Program<PumpFun>(IDL as PumpFun, provider);
+
   // Get/Create token account
   const tokenAccount = await getOrCreateAssociatedTokenAccount(connection, keypair, mint, keypair.publicKey);
   if (!tokenAccount) {
@@ -38,8 +44,6 @@ async function buyToken(
   const buyAmountToken = getBuyPrice(solAmountLamp, tokenData);
   const buyAmountSolWithSlippage = solAmountLamp + (solAmountLamp * SLIPAGE_POINTS) / 10000n;
 
-  console.log(solAmountLamp);
-  console.log(buyAmountSolWithSlippage);
   const FEE_RECEIPT = new web3.PublicKey("CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM");
   const transaction = new web3.Transaction();
 
@@ -50,7 +54,7 @@ async function buyToken(
 
   // set the desired priority fee
   const addPriorityFee = web3.ComputeBudgetProgram.setComputeUnitPrice({
-    microLamports: 0.0001 * 1000000000,
+    microLamports: 0.00001 * 1000000000,
   });
 
   transaction
@@ -71,9 +75,9 @@ async function buyToken(
 
   //#1
   console.log(new Date().toISOString());
-  // const sig = await web3.sendAndConfirmTransaction(connection, transaction, [keypair]);
+  const sig = await web3.sendAndConfirmTransaction(connection, transaction, [keypair]);
   //#2
   console.log(new Date().toISOString());
-  // return sig;
+  return sig;
 }
 export default buyToken;
