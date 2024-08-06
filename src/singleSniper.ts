@@ -1,8 +1,8 @@
 import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 import * as web3 from "@solana/web3.js";
 import dotenv from "dotenv";
-import buyToken from "./utils/buyToken";
-import promptUserBuy from "./utils/promptUserBuy";
+import buyToken from "../utils/buyToken";
+import promptUserBuy from "../utils/promptUserBuy";
 dotenv.config();
 
 async function main() {
@@ -16,7 +16,7 @@ async function main() {
     }
 
     // Load RPC
-    const rpc = process.env.RPC;
+    const rpc = process.env.HTTPS_ENDPOINT;
     if (!rpc) {
       throw new Error("Missing RPC. Fill it in .env file");
     }
@@ -28,8 +28,8 @@ async function main() {
     }
     console.log("Connected to the network");
 
-    const { tokenAddress, solAmount } = await promptUserBuy();
-    const sig = await buyToken(tokenAddress, connection, keypair, solAmount, 5);
+    const { tokenAddress, solAmount, slippage, priorityFee } = await promptUserBuy();
+    const sig = await buyToken(tokenAddress, connection, keypair, solAmount, slippage, priorityFee);
     console.log("Signature:", sig);
   } catch (error) {
     console.error(error.message);

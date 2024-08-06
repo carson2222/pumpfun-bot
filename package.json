@@ -20,7 +20,8 @@
   },
   "scripts": {
     "build": "node ./build.js",
-    "run": "node ./dist/bot.js"
+    "auto": "node ./dist/autoSniper.js",
+    "single": "node ./dist/singleSniper.js"
   },
   "author": "",
   "license": "ISC",

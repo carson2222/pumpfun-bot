@@ -2,8 +2,8 @@ const esbuild = require("esbuild");
 
 esbuild
   .build({
-    entryPoints: ["./index.ts"], // Your main entry point
-    outfile: "dist/bot.js", // Output file
+    entryPoints: ["./src/autoSniper.ts", "./src/singleSniper.ts"], // Your main entry point
+    outdir: "dist", // Output file
     bundle: true, // Bundle dependencies
     minify: true, // Minify for production
     platform: "node", // Target Node.js runtime
