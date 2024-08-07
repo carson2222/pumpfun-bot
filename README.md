@@ -22,7 +22,7 @@ To run Pump.fun bot, follow these steps:
 1. Clone the repository: `git clone https://github.com/carson2222/pumpfun-bot`
 2. Navigate to the project directory: `cd pumpfun-bot`
 3. Install the dependencies: `npm i`
-4. Fill in `.env`
+4. Fill in `.env` (if you have no RPC, Quicknode is pretty good & free)
 5. Build the application: `npm run build`
 6. Run the bot using `auto` or `single` mode: `npm run <auto/single>`
 7. Follow the steps in the cmd
