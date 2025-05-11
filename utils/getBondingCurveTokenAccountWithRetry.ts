@@ -11,7 +11,9 @@ export default async function getBondingCurveTokenAccountWithRetry(
 
   while (retries < maxRetries) {
     try {
-      accountInfo = await connection.getAccountInfo(bondingCurve);
+      accountInfo = await connection.getAccountInfo(bondingCurve, { 
+    commitment: "processed"
+});
       if (accountInfo) break;
     } catch (error) {
       console.error("Failed to get account info:", error);
